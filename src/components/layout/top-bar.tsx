@@ -26,7 +26,9 @@ import {
   User as UserIcon,
   ChevronRight,
   Command,
+  ArrowLeft,
 } from "lucide-react";
+import Link from "next/link";
 import { useTheme } from "next-themes";
 import { NotificationBell } from "@/components/layout/notification-bell";
 import type { User } from "@supabase/supabase-js";
@@ -94,24 +96,40 @@ export function TopBar({ user }: TopBarProps) {
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-border/50 bg-card/80 px-6 backdrop-blur-sm">
-      {/* Left: Breadcrumbs */}
-      <div className="flex items-center gap-1.5 text-sm">
-        {breadcrumbs.map((crumb, idx) => (
-          <span key={crumb.segment} className="flex items-center gap-1.5">
-            {idx > 0 && (
-              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
-            )}
-            <span
-              className={
-                idx === breadcrumbs.length - 1
-                  ? "font-medium text-foreground"
-                  : "text-muted-foreground"
-              }
-            >
-              {crumb.label}
+      {/* Left: Back button + Breadcrumbs */}
+      <div className="flex items-center gap-2 text-sm">
+        {segments.length > 1 && (
+          <button
+            onClick={() => router.back()}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            aria-label="Volver"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+        )}
+        {breadcrumbs.map((crumb, idx) => {
+          const href = "/" + segments.slice(0, idx + 1).join("/");
+          const isLast = idx === breadcrumbs.length - 1;
+          return (
+            <span key={crumb.segment} className="flex items-center gap-1.5">
+              {idx > 0 && (
+                <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
+              )}
+              {isLast ? (
+                <span className="font-medium text-foreground">
+                  {crumb.label}
+                </span>
+              ) : (
+                <Link
+                  href={href}
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {crumb.label}
+                </Link>
+              )}
             </span>
-          </span>
-        ))}
+          );
+        })}
       </div>
 
       {/* Right: Search + Actions */}

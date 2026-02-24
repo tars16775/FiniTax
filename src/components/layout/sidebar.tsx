@@ -125,11 +125,15 @@ export function Sidebar({ user }: SidebarProps) {
           "flex items-center transition-opacity duration-200",
           collapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100 flex-1"
         )}>
-          <Logo size="sm" />
+          <Link href="/" className="transition-opacity hover:opacity-80">
+            <Logo size="sm" />
+          </Link>
         </div>
         {collapsed && (
           <div className="flex flex-1 items-center justify-center">
-            <Logo size="sm" showText={false} />
+            <Link href="/" className="transition-opacity hover:opacity-80">
+              <Logo size="sm" showText={false} />
+            </Link>
           </div>
         )}
         <button
