@@ -38,54 +38,31 @@ export async function createOrganization(
     return { success: false, error: firstError.message };
   }
 
-  // Check NIT uniqueness
-  const { data: existingOrg } = await supabase
-    .from("organizations")
-    .select("id")
-    .eq("nit_number", parsed.data.nit_number)
-    .maybeSingle();
+  // Create organization + add creator as ADMIN via SECURITY DEFINER RPC
+  const { data: orgJson, error: rpcError } = await supabase.rpc(
+    "create_organization_with_admin",
+    {
+      p_name: parsed.data.name,
+      p_nit_number: parsed.data.nit_number,
+      p_nrc_number: parsed.data.nrc_number || null,
+      p_industry_code: parsed.data.industry_code || null,
+    }
+  );
 
-  if (existingOrg) {
-    return { success: false, error: "Ya existe una empresa con este NIT" };
-  }
-
-  // Create organization
-  const { data: org, error: orgError } = await supabase
-    .from("organizations")
-    .insert({
-      name: parsed.data.name,
-      nit_number: parsed.data.nit_number,
-      nrc_number: parsed.data.nrc_number || null,
-      industry_code: parsed.data.industry_code || null,
-    })
-    .select()
-    .single();
-
-  if (orgError || !org) {
-    console.error("Create org error:", orgError);
+  if (rpcError || !orgJson) {
+    console.error("Create org RPC error:", rpcError);
+    if (rpcError?.message?.includes("NIT already exists")) {
+      return { success: false, error: "Ya existe una empresa con este NIT" };
+    }
     return { success: false, error: "Error al crear la empresa" };
   }
 
-  // Add creator as ADMIN member
-  const { error: memberError } = await supabase
-    .from("organization_members")
-    .insert({
-      organization_id: org.id,
-      user_id: user.id,
-      role: "ADMIN",
-    });
-
-  if (memberError) {
-    console.error("Add member error:", memberError);
-    // Rollback org creation
-    await supabase.from("organizations").delete().eq("id", org.id);
-    return { success: false, error: "Error al asignar rol de administrador" };
-  }
+  const org = orgJson as unknown as Organization;
 
   revalidatePath("/dashboard");
   revalidatePath("/onboarding");
 
-  return { success: true, data: org as Organization };
+  return { success: true, data: org };
 }
 
 // ---- Update Organization ----
