@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand";
 import { OrgSwitcher } from "@/components/layout/org-switcher";
 import { usePermissions } from "@/lib/rbac/client-guard";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import type { Permission } from "@/lib/rbac/permissions";
 import {
   LayoutDashboard,
@@ -20,8 +21,8 @@ import {
   ClipboardList,
   Bell,
   Settings,
-  ChevronsLeft,
-  ChevronsRight,
+  PanelLeftClose,
+  PanelLeft,
   Building2,
   RefreshCw,
   Coins,
@@ -35,7 +36,6 @@ interface NavItem {
   name: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  /** Permission required to see this item. If omitted, visible to all. */
   permission?: Permission;
 }
 
@@ -64,7 +64,7 @@ const navigation: NavGroup[] = [
     ],
   },
   {
-    title: "Facturación",
+    title: "Facturacion",
     items: [
       { name: "Facturas DTE", href: "/dashboard/invoices", icon: FileText, permission: "invoices.view" },
       { name: "Gastos", href: "/dashboard/expenses", icon: Receipt, permission: "expenses.view" },
@@ -76,14 +76,14 @@ const navigation: NavGroup[] = [
     title: "Cumplimiento",
     items: [
       { name: "Impuestos", href: "/dashboard/taxes", icon: Calculator, permission: "taxes.view" },
-      { name: "Nómina", href: "/dashboard/payroll", icon: Users, permission: "payroll.view" },
+      { name: "Nomina", href: "/dashboard/payroll", icon: Users, permission: "payroll.view" },
     ],
   },
   {
     title: "Reportes",
     items: [
       { name: "Reportes", href: "/dashboard/reports", icon: BarChart3, permission: "reports.view" },
-      { name: "Auditoría", href: "/dashboard/audit", icon: ClipboardList, permission: "audit.view" },
+      { name: "Auditoria", href: "/dashboard/audit", icon: ClipboardList, permission: "audit.view" },
     ],
   },
   {
@@ -101,9 +101,8 @@ interface SidebarProps {
 export function Sidebar({ user }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
-  const { can, role } = usePermissions();
+  const { can } = usePermissions();
 
-  // Filter navigation groups based on user permissions
   const visibleNavigation = navigation
     .map((group) => ({
       ...group,
@@ -116,57 +115,102 @@ export function Sidebar({ user }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "flex flex-col border-r border-sidebar-border bg-sidebar-background transition-all duration-300",
-        collapsed ? "w-[68px]" : "w-64"
+        "group/sidebar relative flex flex-col border-r border-border/50 bg-card transition-[width] duration-300 ease-in-out",
+        collapsed ? "w-[68px]" : "w-[260px]"
       )}
     >
-      {/* Logo */}
-      <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
-        {!collapsed && <Logo size="sm" />}
+      {/* Header: Logo + Collapse */}
+      <div className="flex h-16 items-center border-b border-border/50 px-4">
+        <div className={cn(
+          "flex items-center transition-opacity duration-200",
+          collapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100 flex-1"
+        )}>
+          <Logo size="sm" />
+        </div>
+        {collapsed && (
+          <div className="flex flex-1 items-center justify-center">
+            <Logo size="sm" showText={false} />
+          </div>
+        )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="flex h-8 w-8 items-center justify-center rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+          className={cn(
+            "flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-accent hover:text-foreground",
+            collapsed && "mx-auto"
+          )}
+          aria-label={collapsed ? "Expandir menu" : "Colapsar menu"}
         >
           {collapsed ? (
-            <ChevronsRight className="h-4 w-4" />
+            <PanelLeft className="h-4 w-4" />
           ) : (
-            <ChevronsLeft className="h-4 w-4" />
+            <PanelLeftClose className="h-4 w-4" />
           )}
         </button>
       </div>
 
       {/* Org Switcher */}
-      <div className="border-b border-sidebar-border px-3 py-3">
+      <div className="border-b border-border/50 px-3 py-3">
         <OrgSwitcher collapsed={collapsed} />
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
-        {visibleNavigation.map((group) => (
-          <div key={group.title} className="mb-6">
+      <nav className="flex-1 overflow-y-auto px-3 py-4 scrollbar-thin">
+        {visibleNavigation.map((group, groupIdx) => (
+          <div key={group.title} className={cn(groupIdx > 0 && "mt-6")}>
             {!collapsed && (
-              <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/50">
+              <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
                 {group.title}
               </p>
             )}
-            <ul className="space-y-1">
+            {collapsed && groupIdx > 0 && (
+              <div className="mx-3 mb-3 border-t border-border/30" />
+            )}
+            <ul className="space-y-0.5">
               {group.items.map((item) => {
-                const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                const isActive =
+                  pathname === item.href ||
+                  (item.href !== "/dashboard" && pathname.startsWith(item.href + "/"));
+
+                const linkContent = (
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      "group/link flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-150",
+                      isActive
+                        ? "bg-primary/10 text-primary shadow-sm shadow-primary/5"
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                      collapsed && "justify-center px-0"
+                    )}
+                  >
+                    <item.icon
+                      className={cn(
+                        "h-[18px] w-[18px] shrink-0 transition-colors",
+                        isActive
+                          ? "text-primary"
+                          : "text-muted-foreground/70 group-hover/link:text-foreground"
+                      )}
+                    />
+                    {!collapsed && (
+                      <span className="truncate">{item.name}</span>
+                    )}
+                    {isActive && !collapsed && (
+                      <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />
+                    )}
+                  </Link>
+                );
+
                 return (
                   <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                        isActive
-                          ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                          : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
-                      )}
-                      title={collapsed ? item.name : undefined}
-                    >
-                      <item.icon className="h-5 w-5 shrink-0" />
-                      {!collapsed && <span>{item.name}</span>}
-                    </Link>
+                    {collapsed ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
+                        <TooltipContent side="right" sideOffset={8}>
+                          {item.name}
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      linkContent
+                    )}
                   </li>
                 );
               })}
@@ -175,19 +219,44 @@ export function Sidebar({ user }: SidebarProps) {
         ))}
       </nav>
 
-      {/* Settings Link */}
-      <div className="border-t border-sidebar-border px-3 py-3">
-        <Link
-          href="/dashboard/settings"
-          className={cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors",
-            pathname === "/dashboard/settings" && "bg-sidebar-accent text-sidebar-accent-foreground"
-          )}
-          title={collapsed ? "Configuración" : undefined}
-        >
-          <Settings className="h-5 w-5 shrink-0" />
-          {!collapsed && <span>Configuración</span>}
-        </Link>
+      {/* Settings Footer */}
+      <div className="border-t border-border/50 px-3 py-3">
+        {(() => {
+          const isSettingsActive = pathname === "/dashboard/settings";
+          const settingsLink = (
+            <Link
+              href="/dashboard/settings"
+              className={cn(
+                "group/link flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-150",
+                isSettingsActive
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                collapsed && "justify-center px-0"
+              )}
+            >
+              <Settings
+                className={cn(
+                  "h-[18px] w-[18px] shrink-0 transition-colors",
+                  isSettingsActive
+                    ? "text-primary"
+                    : "text-muted-foreground/70 group-hover/link:text-foreground"
+                )}
+              />
+              {!collapsed && <span>Configuracion</span>}
+            </Link>
+          );
+
+          return collapsed ? (
+            <Tooltip>
+              <TooltipTrigger asChild>{settingsLink}</TooltipTrigger>
+              <TooltipContent side="right" sideOffset={8}>
+                Configuracion
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            settingsLink
+          );
+        })()}
       </div>
     </aside>
   );

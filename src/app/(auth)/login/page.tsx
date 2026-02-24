@@ -1,126 +1,144 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, Loader2, Mail, Lock } from "lucide-react";
+import { Button, Input, Label } from "@/components/ui";
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) {
-        setError(error.message === "Invalid login credentials"
-          ? "Correo o contraseña incorrectos"
-          : error.message);
+      if (authError) {
+        if (authError.message === "Invalid login credentials") {
+          setError("Correo o contrasena incorrectos. Intenta de nuevo.");
+        } else {
+          setError(authError.message);
+        }
         return;
       }
 
       router.push("/dashboard");
       router.refresh();
     } catch {
-      setError("Ocurrió un error inesperado. Intenta de nuevo.");
+      setError("Ocurrio un error inesperado. Intenta de nuevo.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Card className="border-0 shadow-none sm:border sm:shadow-sm">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Iniciar Sesión</CardTitle>
-        <CardDescription>
-          Ingresa tu correo y contraseña para acceder a tu cuenta
-        </CardDescription>
-      </CardHeader>
+    <div className="animate-fade-in">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          Bienvenido de nuevo
+        </h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Ingresa tus credenciales para acceder a tu cuenta
+        </p>
+      </div>
 
-      <form onSubmit={handleLogin}>
-        <CardContent className="space-y-4">
-          {error && (
-            <div className="flex items-center gap-2 rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              {error}
-            </div>
-          )}
-
-          <div className="space-y-2">
-            <Label htmlFor="email">Correo Electrónico</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="correo@empresa.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="pl-10"
-                required
-                disabled={loading}
-              />
-            </div>
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Error Message */}
+        {error && (
+          <div className="animate-slide-in-down rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-3">
+            <p className="text-sm text-destructive">{error}</p>
           </div>
+        )}
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">Contraseña</Label>
-              <Link
-                href="/forgot-password"
-                className="text-xs text-primary hover:underline"
-              >
-                ¿Olvidaste tu contraseña?
-              </Link>
-            </div>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="pl-10"
-                required
-                disabled={loading}
-                minLength={6}
-              />
-            </div>
+        {/* Email */}
+        <div className="space-y-2">
+          <Label htmlFor="email">Correo electronico</Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="tu@empresa.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="pl-10"
+              required
+              autoComplete="email"
+              autoFocus
+            />
           </div>
-        </CardContent>
+        </div>
 
-        <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Iniciar Sesión
-          </Button>
+        {/* Password */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password">Contrasena</Label>
+          </div>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Tu contrasena"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pl-10 pr-10"
+              required
+              autoComplete="current-password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+        </div>
 
-          <p className="text-center text-sm text-muted-foreground">
-            ¿No tienes cuenta?{" "}
-            <Link href="/signup" className="font-medium text-primary hover:underline">
-              Regístrate gratis
-            </Link>
-          </p>
-        </CardFooter>
+        {/* Submit */}
+        <Button
+          type="submit"
+          className="w-full"
+          size="lg"
+          loading={loading}
+        >
+          Iniciar sesion
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
       </form>
-    </Card>
+
+      {/* Footer */}
+      <p className="mt-8 text-center text-sm text-muted-foreground">
+        No tienes una cuenta?{" "}
+        <Link
+          href="/signup"
+          className="font-medium text-primary underline-offset-4 hover:underline"
+        >
+          Crear cuenta
+        </Link>
+      </p>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-// UI Components barrel export
+// UI Components barrel export — FiniTax Design System v2.0
 export { Button, buttonVariants } from "./button";
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./card";
 export { Input } from "./input";
@@ -13,3 +13,8 @@ export { Select } from "./select";
 export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "./dialog";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
 export { Progress } from "./progress";
+export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuGroup, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuRadioGroup } from "./dropdown-menu";
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./tooltip";
+export { Sheet, SheetTrigger, SheetClose, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription } from "./sheet";
+export { ScrollArea, ScrollBar } from "./scroll-area";
+export { Switch } from "./switch";

@@ -1,32 +1,111 @@
 @import "tailwindcss";
 
 /* ============================================
-   FiniTax Design System — Navy Blue & Grey
+   FiniTax Design System v2.0
+   World-class financial application design
    ============================================ */
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================
+   Light Theme — Clean, Professional, Trustworthy
+   ============================================ */
 :root {
-  --background: #F5F7FA;
-  --foreground: #0F172A;
+  /* Core surfaces */
+  --background: #F7F8FA;
+  --foreground: #0C1222;
 
+  /* Cards & containers */
   --card: #FFFFFF;
-  --card-foreground: #0F172A;
+  --card-foreground: #0C1222;
 
+  /* Popovers & floating */
   --popover: #FFFFFF;
-  --popover-foreground: #0F172A;
+  --popover-foreground: #0C1222;
 
-  --primary: #1E3A5F;
-  --primary-foreground: #F8FAFC;
+  /* Primary — Deep Indigo Blue */
+  --primary: #1A2B6D;
+  --primary-foreground: #F0F2FF;
 
-  --secondary: #E2E8F0;
+  /* Secondary */
+  --secondary: #EEEEF4;
   --secondary-foreground: #1E293B;
 
-  --muted: #F1F5F9;
+  /* Muted */
+  --muted: #F1F2F6;
   --muted-foreground: #64748B;
 
-  --accent: #DBEAFE;
-  --accent-foreground: #1E3A5F;
+  /* Accent */
+  --accent: #E8ECFF;
+  --accent-foreground: #1A2B6D;
+
+  /* Destructive */
+  --destructive: #DC2626;
+  --destructive-foreground: #FAFAFA;
+
+  /* Success */
+  --success: #059669;
+  --success-foreground: #FAFAFA;
+
+  /* Warning */
+  --warning: #D97706;
+  --warning-foreground: #1C1917;
+
+  /* Info */
+  --info: #2563EB;
+  --info-foreground: #FAFAFA;
+
+  /* Borders & inputs */
+  --border: #E2E5EB;
+  --input: #E2E5EB;
+  --ring: #1A2B6D;
+
+  /* Radius */
+  --radius: 0.75rem;
+
+  /* Sidebar */
+  --sidebar-background: #FFFFFF;
+  --sidebar-foreground: #475569;
+  --sidebar-primary: #1A2B6D;
+  --sidebar-primary-foreground: #F0F2FF;
+  --sidebar-accent: #F0F2FF;
+  --sidebar-accent-foreground: #1A2B6D;
+  --sidebar-border: #EDF0F4;
+  --sidebar-muted: #94A3B8;
+
+  /* Charts */
+  --chart-1: #1A2B6D;
+  --chart-2: #3B82F6;
+  --chart-3: #059669;
+  --chart-4: #D97706;
+  --chart-5: #7C3AED;
+  --chart-6: #DC2626;
+}
+
+/* ============================================
+   Dark Theme — Deep, Rich, Sophisticated
+   ============================================ */
+.dark {
+  --background: #0B0F1A;
+  --foreground: #E8ECF4;
+
+  --card: #131829;
+  --card-foreground: #E8ECF4;
+
+  --popover: #131829;
+  --popover-foreground: #E8ECF4;
+
+  --primary: #6C8AFF;
+  --primary-foreground: #F0F2FF;
+
+  --secondary: #1C2237;
+  --secondary-foreground: #CBD5E1;
+
+  --muted: #1C2237;
+  --muted-foreground: #8896B3;
+
+  --accent: #1E2A4A;
+  --accent-foreground: #A5B4FC;
 
   --destructive: #EF4444;
   --destructive-foreground: #FAFAFA;
@@ -35,79 +114,35 @@
   --success-foreground: #FAFAFA;
 
   --warning: #F59E0B;
-  --warning-foreground: #1E293B;
+  --warning-foreground: #1C1917;
 
-  --border: #E2E8F0;
-  --input: #E2E8F0;
-  --ring: #1E3A5F;
+  --info: #60A5FA;
+  --info-foreground: #FAFAFA;
 
-  --radius: 0.625rem;
+  --border: #1E2A3E;
+  --input: #1E2A3E;
+  --ring: #6C8AFF;
 
-  --sidebar-background: #FFFFFF;
-  --sidebar-foreground: #334155;
-  --sidebar-primary: #1E3A5F;
-  --sidebar-primary-foreground: #F8FAFC;
-  --sidebar-accent: #F1F5F9;
-  --sidebar-accent-foreground: #1E3A5F;
-  --sidebar-border: #E2E8F0;
+  --sidebar-background: #0F1425;
+  --sidebar-foreground: #8896B3;
+  --sidebar-primary: #6C8AFF;
+  --sidebar-primary-foreground: #F0F2FF;
+  --sidebar-accent: #1C2545;
+  --sidebar-accent-foreground: #A5B4FC;
+  --sidebar-border: #1A2238;
+  --sidebar-muted: #5A6A8A;
 
-  --chart-1: #1E3A5F;
-  --chart-2: #3B82F6;
-  --chart-3: #10B981;
-  --chart-4: #F59E0B;
-  --chart-5: #8B5CF6;
-}
-
-.dark {
-  --background: #0B1120;
-  --foreground: #E2E8F0;
-
-  --card: #111827;
-  --card-foreground: #E2E8F0;
-
-  --popover: #111827;
-  --popover-foreground: #E2E8F0;
-
-  --primary: #3B82F6;
-  --primary-foreground: #F8FAFC;
-
-  --secondary: #1E293B;
-  --secondary-foreground: #CBD5E1;
-
-  --muted: #1E293B;
-  --muted-foreground: #94A3B8;
-
-  --accent: #1E3A5F;
-  --accent-foreground: #DBEAFE;
-
-  --destructive: #DC2626;
-  --destructive-foreground: #FAFAFA;
-
-  --success: #059669;
-  --success-foreground: #FAFAFA;
-
-  --warning: #D97706;
-  --warning-foreground: #FAFAFA;
-
-  --border: #1E293B;
-  --input: #1E293B;
-  --ring: #3B82F6;
-
-  --sidebar-background: #111827;
-  --sidebar-foreground: #94A3B8;
-  --sidebar-primary: #3B82F6;
-  --sidebar-primary-foreground: #F8FAFC;
-  --sidebar-accent: #1E293B;
-  --sidebar-accent-foreground: #DBEAFE;
-  --sidebar-border: #1E293B;
-
-  --chart-1: #3B82F6;
+  --chart-1: #6C8AFF;
   --chart-2: #60A5FA;
   --chart-3: #34D399;
   --chart-4: #FBBF24;
   --chart-5: #A78BFA;
+  --chart-6: #FB7185;
 }
 
+/* ============================================
+   Tailwind v4 Theme Mapping
+   ============================================ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -129,6 +164,8 @@
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -139,22 +176,40 @@
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-muted: var(--sidebar-muted);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --radius-2xl: calc(var(--radius) + 8px);
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono);
 
+  /* Animations */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-fade-out: fade-out 0.2s ease-out;
+  --animate-slide-in-up: slide-in-up 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-in-down: slide-in-down 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-in-left: slide-in-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-in-right: slide-in-right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-scale-in: scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-spin-slow: spin 3s linear infinite;
+  --animate-pulse-soft: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
 }
 
+/* ============================================
+   Keyframe Animations
+   ============================================ */
 @keyframes accordion-down {
   from { height: 0; }
   to { height: var(--radix-accordion-content-height); }
@@ -165,6 +220,59 @@
   to { height: 0; }
 }
 
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slide-in-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
 * {
   @apply border-border;
 }
@@ -175,8 +283,127 @@ body {
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 *:focus-visible {
-  @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  @apply outline-none ring-2 ring-ring/40 ring-offset-2 ring-offset-background;
+}
+
+/* ============================================
+   Scrollbar Styling
+   ============================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.25);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.45);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.35);
+}
+
+/* ============================================
+   Glass morphism utilities
+   ============================================ */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+.dark .glass {
+  background: rgba(19, 24, 41, 0.72);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+}
+
+.dark .glass-strong {
+  background: rgba(19, 24, 41, 0.88);
+}
+
+/* ============================================
+   Gradient utilities
+   ============================================ */
+.gradient-primary {
+  background: linear-gradient(135deg, #1A2B6D 0%, #2D4AAE 100%);
+}
+
+.dark .gradient-primary {
+  background: linear-gradient(135deg, #2D3F8F 0%, #6C8AFF 100%);
+}
+
+.gradient-mesh {
+  background:
+    radial-gradient(at 40% 20%, rgba(26, 43, 109, 0.07) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(5, 150, 105, 0.05) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, rgba(217, 119, 6, 0.03) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(124, 58, 237, 0.05) 0px, transparent 50%);
+}
+
+.gradient-subtle {
+  background: linear-gradient(180deg, #F7F8FA 0%, #EFF1F5 100%);
+}
+
+.dark .gradient-subtle {
+  background: linear-gradient(180deg, #0B0F1A 0%, #0F1425 100%);
+}
+
+/* ============================================
+   Shimmer / skeleton loading
+   ============================================ */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(226, 229, 235, 0.5) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.dark .shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(30, 42, 62, 0.5) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* ============================================
+   Selection
+   ============================================ */
+::selection {
+  background: rgba(26, 43, 109, 0.15);
+  color: #0C1222;
+}
+
+.dark ::selection {
+  background: rgba(108, 138, 255, 0.25);
+  color: #E8ECF4;
 }
